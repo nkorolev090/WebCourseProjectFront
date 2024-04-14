@@ -6,14 +6,12 @@ const Registration = ({ registrations, setRegistrations, removeRegistration, use
     useEffect(() => {
            
     const getRegistrations = async () => {
-
+        setRegistrations(null)
         const requestOptions = {
             method: 'GET'
         }
-        if(user.userDTO != null){
-            if(user.userDTO.client != null){
-                return await fetch(`api/Registrations/byClientId?client_id=${user.userDTO.client.id}`, requestOptions)
-
+        if(user.userRole != undefined){
+            return await fetch(`api/Registrations`, requestOptions)
                 .then(response => response.json())
                 .then(
                     (data) => {
@@ -24,21 +22,6 @@ const Registration = ({ registrations, setRegistrations, removeRegistration, use
                         console.log(error)
                     }
                 )
-            }
-            if(user.userDTO.mechanic !== null){
-                return await fetch(`api/Registrations/byMechanicId?mechanic_id=${user.userDTO.mechanic.id}`, requestOptions)
-
-                .then(response => response.json())
-                .then(
-                    (data) => {
-                        console.log('Data:', data)
-                        setRegistrations(data)
-                    },
-                    (error) => {
-                        console.log(error)
-                    }
-                )
-            }
         }
         
     }
@@ -64,7 +47,8 @@ const Registration = ({ registrations, setRegistrations, removeRegistration, use
     return (
         <React.Fragment>
             <h3>Список регистраций</h3>
-            {registrations.map(({id, car_name, reg_date, info, status_name, reg_price }) => (
+            { registrations != null &&
+            registrations.map(({id, car_name, reg_date, info, status_name, reg_price }) => (
                 <div className="Registration" key={id} id={id} >
                     <strong > {id}: {status_name} </strong>
                     <button onClick={() => deleteItem({ id })}>Удалить</button>

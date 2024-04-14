@@ -9,16 +9,11 @@ const LogOff = ({ setUser }) => {
     };
     return await fetch("api/account/logoff", requestOptions).then(
       (response) => {
-        response.status === 200 &&
-          setUser({ isAuthenticated: false, userDTO: {
-            email: "",
-            userName: "",
-            phoneNumber: "",
-            isClient: true,
-            client: null,
-            mechanic: null
-            } });
-        response.status === 401 && navigate("/login");
+          if(response.status === 200){
+            setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
+            navigate("/");
+          }
+         
       }
     );
   };

@@ -6,7 +6,6 @@ const LogIn = ({ user, setUser, getUser }) => {
   const logIn = async (event) => {
     event.preventDefault();
     var { email, password } = document.forms[0];
-    // console.log(email.value, password.value)
     const requestOptions = {
       method: "POST",
 
@@ -18,8 +17,7 @@ const LogIn = ({ user, setUser, getUser }) => {
     };
     return await fetch("api/account/login", requestOptions)
       .then((response) => {
-        // console.log(response.status)
-        response.status !== 200 && setUser({ isAuthenticated: false, userDTO: null });
+        response.status !== 200 && setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
         return response.json();
       })
       .then(
@@ -30,7 +28,7 @@ const LogIn = ({ user, setUser, getUser }) => {
             typeof data.email !== "undefined"
           ) {
             getUser();
-            setUser({ isAuthenticated: true, userDTO: null});
+            setUser({ isAuthenticated: true, userDTO: null, userRole: data.userRole });
             navigate("/");
           }
           typeof data !== "undefined" &&

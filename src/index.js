@@ -11,20 +11,20 @@ import RegUser from "./Components/RegUser/RegUser"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const App = () => {
-  const [user, setUser] = useState({ isAuthenticated: false, userDTO: null });
+  const [user, setUser] = useState({ isAuthenticated: false, userDTO: null, userRole: "" });
 
   const getUser = async () => {
     return await fetch("api/account/isauthenticated")
       .then((response) => {
         response.status === 401 &&
-          setUser({ isAuthenticated: false, userDTO: null });
+          setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
         return response.json();
       })
       .then(
         (data) => {
           console.log(data);
           if (typeof data !== "undefined") {
-            setUser({ isAuthenticated: true, userDTO: data.userDTO });
+            setUser({ isAuthenticated: true, userDTO: data.userDTO, userRole: data.userRole });
           }
         },
         (error) => {
@@ -65,12 +65,12 @@ const App = () => {
             path="/registrations"
             element={
               <>
-                {user.userDTO != null && user.isAuthenticated && user.userDTO.isClient ? (
+                { user.userRole == "client" ? (
                   <RegistrationCreate addRegistration={addRegistration} />
                 ) : (
                   ""
                 )}
-                {user.userDTO != null && user.isAuthenticated ? (
+                { user.userRole == "client" || user.userRole == "mechanic" ? (
                   <>
                     <RegistrationUpdate updtRegistration={updateRegistration} />
                     <Registration

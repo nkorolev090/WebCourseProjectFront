@@ -20,7 +20,7 @@ const RegUser = ({ user, setUser, getUser }) => {
     return await fetch("api/account/register", requestOptions)
       .then((response) => {
         // console.log(response.status)
-        response.status !== 200 && setUser({ isAuthenticated: false, userDTO: null });
+        response.status !== 200 && setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
         return response.json();
       })
       .then(
@@ -31,7 +31,7 @@ const RegUser = ({ user, setUser, getUser }) => {
             typeof data.email !== "undefined"
           ) {
             getUser();
-            setUser({ isAuthenticated: true, userDTO: null});
+            setUser({ isAuthenticated: true, userDTO: null, userRole: ""});
             navigate("/");
           }
           typeof data !== "undefined" &&
@@ -48,7 +48,7 @@ const RegUser = ({ user, setUser, getUser }) => {
   return (
     <>
       {user.userDTO != null && user.isAuthenticated ? (
-        <h3>Пользователь {user.userDTO.userName} успешно зарешистрирован в системе</h3>
+        <h3>Пользователь {user.userDTO.userName} успешно зарегистрирован в системе</h3>
       ) : ("")}
         <>
           <h3>Зарегистрироваться</h3>
