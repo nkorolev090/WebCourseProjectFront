@@ -1,4 +1,5 @@
 import React from "react";
+
 const RegistrationCreate = ({ addRegistration }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,8 +36,10 @@ const RegistrationCreate = ({ addRegistration }) => {
     };
     createRegistration();
   };
+
   return (
     <React.Fragment>
+      <>
       <h3>Создание новой записи</h3>
       <form onSubmit={handleSubmit}>
         <label>Id автомобиля: </label>
@@ -51,6 +54,7 @@ const RegistrationCreate = ({ addRegistration }) => {
         <input type="text" name="info" placeholder="Введите информацию:" />
         <button type="submit">Создать</button>
       </form>
+      </>
     </React.Fragment>
   );
 };

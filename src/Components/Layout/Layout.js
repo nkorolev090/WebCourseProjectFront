@@ -13,16 +13,20 @@ const items = [
     key: "2",
   },
   {
-    label: <Link to={"/login"}>Вход</Link>,
+    label: <Link to={"/registration_create"}>Создать запись</Link>,
     key: "3",
   },
   {
-    label: <Link to={"/logoff"}>Выход</Link>,
+    label: <Link to={"/login"}>Вход</Link>,
     key: "4",
   },
   {
-    label: <Link to={"/reguser"}>Зарегистрироваться</Link>,
+    label: <Link to={"/logoff"}>Выход</Link>,
     key: "5",
+  },
+  {
+    label: <Link to={"/reguser"}>Зарегистрироваться</Link>,
+    key: "6",
   },
 ];
 

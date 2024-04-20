@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Registration from "./Components/Registration/Registration";
 import RegistrationCreate from "./Components/RegistrationCreate/RegistrationCreate";
-import RegistrationUpdate from "./Components/RegistrationUpdate/RegistrationUpdate";
 import Layout from "./Components/Layout/Layout";
 import LogIn from "./Components/LogIn/LogIn";
 import LogOff from "./Components/LogOff/LogOff";
-import RegUser from "./Components/RegUser/RegUser"
+import RegUser from "./Components/RegUser/RegUser";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const App = () => {
-  const [user, setUser] = useState({ isAuthenticated: false, userDTO: null, userRole: "" });
+  const [user, setUser] = useState({
+    isAuthenticated: false,
+    userDTO: null,
+    userRole: "",
+  });
 
   const getUser = async () => {
     return await fetch("api/account/isauthenticated")
@@ -24,7 +27,11 @@ const App = () => {
         (data) => {
           console.log(data);
           if (typeof data !== "undefined") {
-            setUser({ isAuthenticated: true, userDTO: data.userDTO, userRole: data.userRole });
+            setUser({
+              isAuthenticated: true,
+              userDTO: data.userDTO,
+              userRole: data.userRole,
+            });
           }
         },
         (error) => {
@@ -40,8 +47,10 @@ const App = () => {
   const [registrations, setRegistrations] = useState([]);
   const addRegistration = (registration) =>
     setRegistrations([...registrations, registration]);
+
   const removeRegistration = (removeId) =>
     setRegistrations(registrations.filter(({ id }) => id !== removeId));
+
   const updateRegistration = (udptId, udptRegistration) => {
     console.log(udptRegistration);
     const newRegistrations = registrations.map((obj) => {
@@ -65,19 +74,15 @@ const App = () => {
             path="/registrations"
             element={
               <>
-                { user.userRole == "client" ? (
-                  <RegistrationCreate addRegistration={addRegistration} />
-                ) : (
-                  ""
-                )}
-                { user.userRole == "client" || user.userRole == "mechanic" ? (
+                {user.userRole == "client" || user.userRole == "mechanic" ? (
                   <>
-                    <RegistrationUpdate updtRegistration={updateRegistration} />
+                    {/* <RegistrationUpdate updtRegistration={updateRegistration} /> */}
                     <Registration
                       user={user}
                       registrations={registrations}
                       setRegistrations={setRegistrations}
                       removeRegistration={removeRegistration}
+                      updateRegistration={updateRegistration}
                     />
                   </>
                 ) : (
@@ -86,6 +91,17 @@ const App = () => {
               </>
             }
           />
+          <Route path="/registration_create"
+            element=
+            {
+              <>
+                {user.userRole == "client" ? (
+                  <RegistrationCreate addRegistration={addRegistration} />
+                ) : (
+                  ""
+                )}
+              </>
+            }/>
           <Route
             path="/login"
             element={<LogIn user={user} setUser={setUser} getUser={getUser} />}
@@ -93,7 +109,9 @@ const App = () => {
           <Route path="/logoff" element={<LogOff setUser={setUser} />} />
           <Route
             path="/reguser"
-            element={<RegUser user={user} setUser={setUser} getUser={getUser} />}
+            element={
+              <RegUser user={user} setUser={setUser} getUser={getUser} />
+            }
           />
           <Route path="*" element={<h3>404</h3>} />
         </Route>
