@@ -1,20 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button, Checkbox, Form, Input } from "antd";
+
 const RegUser = ({ user, setUser, getUser }) => {
   const [errorMessages, setErrorMessages] = useState([]);
   const navigate = useNavigate();
-  const regUser = async (event) => {
+  const regUser = async (formValues) => {
     event.preventDefault();
-    var { email, password, passwordConfirm } = document.forms[0];
+    
     // console.log(email.value, password.value)
     const requestOptions = {
       method: "POST",
 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: email.value,
-        password: password.value,
-        passwordConfirm : passwordConfirm.value,
+        name: formValues.name,
+        midname: formValues.midname,
+        surname: formValues.surname,
+        phoneNumber: formValues.phoneNumber,
+        email: formValues.email,
+        password: formValues.password,
+        passwordConfirm: formValues.passwordConfirm,
       }),
     };
     return await fetch("api/account/register", requestOptions)
@@ -52,18 +58,84 @@ const RegUser = ({ user, setUser, getUser }) => {
       ) : ("")}
         <>
           <h3>Зарегистрироваться</h3>
-          <form onSubmit={regUser}>
-            <label>Пользователь </label>
-            <input type="text" name="email" placeholder="Логин" />
-            <br />
-            <label>Пароль </label>
-            <input type="text" name="password" placeholder="Пароль" />
-            <br />
-            <label>Подтвердите пароль </label>
-            <input type="text" name="passwordConfirm" placeholder="Подтвердите пароль" />
-            <br />
-            <button type="submit">Войти</button>
-          </form>
+          <Form
+            onFinish={regUser}
+            name="basic"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            onFinishFailed={renderErrorMessage}
+            autoComplete="off">
+            <Form.Item
+              label="Имя"
+              name="name"
+              rules={[
+                { required: false},
+              ]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Отчество"
+              name="midname"
+              rules={[
+                { required: false },
+              ]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Фамилия"
+              name="surname"
+              rules={[
+                { required: false},
+              ]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Телефон"
+              name="phoneNumber"
+              rules={[
+                { required: true, message: "Пожалуйста введите номер телефона" },
+              ]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                { required: true, message: "Пожалуйста введите почту" },
+              ]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Пароль"
+              name="password"
+              rules={[
+                { required: true, message: "Пожалуйста введите пароль" },
+              ]}>
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              label="Потдвердите пароль"
+              name="passwordConfirm"
+              rules={[
+                { required: true, message: "Пожалуйста введите пароль  еще раз" },
+              ]}>
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              name="remember"
+              valuePropName="checked"
+              wrapperCol={{ offset: 8, span: 16 }}>
+              <Checkbox>Запомнить меня</Checkbox>
+              {renderErrorMessage()}
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Войти
+              </Button>
+            </Form.Item>
+          </Form>
           {renderErrorMessage()}
         </>
     </>

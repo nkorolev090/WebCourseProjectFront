@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button, Checkbox, Form, Input } from "antd";
+
 const LogIn = ({ user, setUser, getUser }) => {
   const [errorMessages, setErrorMessages] = useState([]);
   const navigate = useNavigate();
-  const logIn = async (event) => {
-    event.preventDefault();
-    var { email, password } = document.forms[0];
+  const logIn = async (formValues) => {
+
     const requestOptions = {
       method: "POST",
 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: email.value,
-        password: password.value,
+        email: formValues.email,
+        password: formValues.password,
       }),
     };
     return await fetch("api/account/login", requestOptions)
       .then((response) => {
-        response.status !== 200 && setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
+        response.status !== 200 &&
+          setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
         return response.json();
       })
       .then(
@@ -28,7 +30,11 @@ const LogIn = ({ user, setUser, getUser }) => {
             typeof data.email !== "undefined"
           ) {
             getUser();
-            setUser({ isAuthenticated: true, userDTO: null, userRole: data.userRole });
+            setUser({
+              isAuthenticated: true,
+              userDTO: null,
+              userRole: data.userRole,
+            });
             navigate("/");
           }
           typeof data !== "undefined" &&
@@ -49,15 +55,44 @@ const LogIn = ({ user, setUser, getUser }) => {
       ) : (
         <>
           <h3>Вход</h3>
-          <form onSubmit={logIn}>
-            <label>Пользователь </label>
-            <input type="text" name="email" placeholder="Логин" />
-            <br />
-            <label>Пароль </label>
-            <input type="text" name="password" placeholder="Пароль" />
-            <br />
-            <button type="submit">Войти</button>
-          </form>
+          <Form
+            onFinish={logIn}
+            name="basic"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            onFinishFailed={renderErrorMessage}
+            autoComplete="off">
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                { required: true, message: "Пожалуйста введите почту" },
+              ]}>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Пароль"
+              name="password"
+              rules={[
+                { required: true, message: "Пожалуйста введите пароль" },
+              ]}>
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              name="remember"
+              valuePropName="checked"
+              wrapperCol={{ offset: 8, span: 16 }}>
+              <Checkbox>Запомнить меня</Checkbox>
+              {renderErrorMessage()}
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Войти
+              </Button>
+            </Form.Item>
+          </Form>
           {renderErrorMessage()}
         </>
       )}
