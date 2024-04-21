@@ -65,8 +65,6 @@ const App = () => {
     setRegistrations(newRegistrations);
   };
 
-  const [slots, setSlots] = useState([]);
-
   return (
     <BrowserRouter>
       <Routes>
@@ -101,8 +99,6 @@ const App = () => {
                   <RegistrationCreate
                   user={user}
                   addRegistration={addRegistration}
-                  slots= {slots}
-                  setSlots= {setSlots} 
                   />
                 ) : (
                   ""

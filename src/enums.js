@@ -1,4 +1,4 @@
-import { Button, Select } from "antd";
+import { Checkbox, Button, Select } from "antd";
 import React from "react";
 
 const statuses = [
@@ -25,33 +25,50 @@ const statuses = [
 ];
 
 export const STATUS = (RegistrationUpdate, updateRegistration, record) =>
-  statuses.map(
-    (
-      status //{
-    ) => (
-      // return (
-      <Select.Option key={`${status.id}`} value={`${status.id}`}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => {
-            const registration = {
-              id: record.id,
-              car_id: record.car_id,
-              info: record.info,
-              status: status.id,
-              status_name: status.name,
-            };
-            RegistrationUpdate(updateRegistration, registration);
-          }}
-        >
-          {status.name}
+  statuses.map((status) => (
+    <Select.Option key={`${status.id}`} value={`${status.id}`}>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => {
+          const registration = {
+            id: record.id,
+            car_id: record.car_id,
+            info: record.info,
+            status: status.id,
+            status_name: status.name,
+          };
+          RegistrationUpdate(updateRegistration, registration);
+        }}
+      >
+        {status.name}
+      </a>
+    </Select.Option>
+  ));
+
+export const BREAKDOWN = (breakdowns) =>
+  breakdowns.map((breakdown) => (
+    <Select.Option
+      key={`${breakdown.id}`}
+      value={`${breakdown.id}`}
+      label={breakdown.title}
+    >
+      {
+        <a target="_blank" rel="noopener noreferrer">
+          {breakdown.title}
         </a>
-      </Select.Option>
-    )
-  );
+      }
+    </Select.Option>
+  ));
 
 export const SLOTS_COLUMNS = () => [
+  {
+    title: "В корзину",
+    key: "to_cart",
+    render: (record) => (
+      <Checkbox onChange={(e) => console.log(record, e.target.checked)} />
+    ),
+  },
   {
     title: "Дата начала",
     dataIndex: "start_date",
@@ -79,7 +96,11 @@ export const SLOTS_COLUMNS = () => [
   },
 ];
 
-export const REGISTRATION_COLUMNS = (RegistrationUpdate, updateRegistration, deleteItem) => [
+export const REGISTRATION_COLUMNS = (
+  RegistrationUpdate,
+  updateRegistration,
+  deleteItem
+) => [
   {
     title: "Дата создания",
     dataIndex: "reg_date",
@@ -89,9 +110,7 @@ export const REGISTRATION_COLUMNS = (RegistrationUpdate, updateRegistration, del
     title: "Статус записи",
     key: "status_name",
     render: (record) => (
-      <Select
-        defaultValue = {`${record.status}`}
-      >
+      <Select defaultValue={`${record.status}`}>
         {STATUS(RegistrationUpdate, updateRegistration, record)}
       </Select>
     ),
