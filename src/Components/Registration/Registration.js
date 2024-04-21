@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { DownOutlined } from "@ant-design/icons";
-import { Space, Dropdown, Button, Table } from "antd";
+import {  Select, Button, Table } from "antd";
 import { STATUS } from "../../enums";
 import RegistrationUpdate from "../RegistrationUpdate/RegistrationUpdate";
 import "./Style.css";
@@ -22,16 +21,11 @@ const Registration = ({
       title: "Статус записи",
       key: "status_name",
       render: (record) => (
-        <Dropdown
-          menu={{ items: STATUS(RegistrationUpdate, updateRegistration, record), selectable: true, defaultSelectedKeys: `${record.status}` }}
+        <Select
+          defaultValue = {`${record.status}`}
         >
-          <a>
-            <Space>
-              {record.status_name}
-              <DownOutlined />
-            </Space>
-          </a>
-        </Dropdown>
+          {STATUS(RegistrationUpdate, updateRegistration, record)}
+        </Select>
       ),
     },
     {
