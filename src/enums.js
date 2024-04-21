@@ -1,109 +1,126 @@
-//import { Option } from "antd";
-import { Select } from "antd";
+import { Button, Select } from "antd";
 import React from "react";
 
 const statuses = [
   {
-    id: '1',
+    id: "1",
     name: "На обработке",
   },
   {
-    id: '2',
+    id: "2",
     name: "Одобрена",
   },
   {
-    id: '3',
+    id: "3",
     name: "Отклонена ",
   },
   {
-    id: '4',
+    id: "4",
     name: "Завершена",
   },
   {
-    id: '5',
+    id: "5",
     name: "Гарантийный ремонт",
   },
 ];
-export const STATUS = (RegistrationUpdate, updateRegistration, record) => 
-  statuses.map(status => //{
-    // return (
-      (<Select.Option
-        key= {`${status.id}`}
-        value={`${status.id}`}
-      >
+
+export const STATUS = (RegistrationUpdate, updateRegistration, record) =>
+  statuses.map(
+    (
+      status //{
+    ) => (
+      // return (
+      <Select.Option key={`${status.id}`} value={`${status.id}`}>
         <a
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
-              const registration = {
-                id: record.id,
-                car_id: record.car_id,
-                info: record.info,
-                status: status.id,
-                status_name: status.name,
-              };
-              RegistrationUpdate(updateRegistration, registration);
-            }}
-          >
-            {status.name}
-          </a>
-        </Select.Option>)
-    );
-//  }
-//);
-//[
-//   {
-//     value: "1",
-//     label: (
-//       <a
-//         target="_blank"
-//         rel="noopener noreferrer"
-//         onClick={() => {
-//         const registration = {
-//               id: record.id,
-//               car_id: record.car_id,
-//               info: record.info,
-//               status: 1,
-//               status_name: "На обработке",
-//             };
-//           RegistrationUpdate(updateRegistration, registration);
-//         }}
-//       >
-//         На обработке
-//       </a>
-//     ),
-//   },
-// {
-//   value: "2",
-//   label: (
-//       <a
-//         target="_blank"
-//         rel="noopener noreferrer"
-//         onClick={() => {
-//         const registration = {
-//               id: record.id,
-//               car_id: record.car_id,
-//               info: record.info,
-//               status: 2,
-//               status_name: "Одобрена",
-//             };
-//           RegistrationUpdate(updateRegistration, registration);
-//         }}
-//       >
-//         Одобрена
-//       </a>
-//     ),
-// },
-// {
-//   value: "3",
-//   label: "Отклонена",
-// },
-// {
-//   value: "4",
-//   label: "Завершена",
-// },
-// {
-//   value: "5",
-//   label: "Гарантийный ремонт",
-// },
-//];
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            const registration = {
+              id: record.id,
+              car_id: record.car_id,
+              info: record.info,
+              status: status.id,
+              status_name: status.name,
+            };
+            RegistrationUpdate(updateRegistration, registration);
+          }}
+        >
+          {status.name}
+        </a>
+      </Select.Option>
+    )
+  );
+
+export const SLOTS_COLUMNS = () => [
+  {
+    title: "Дата начала",
+    dataIndex: "start_date",
+    key: "start_date",
+  },
+  {
+    title: "Время начала",
+    key: "start_time",
+    dataIndex: "start_time",
+  },
+  {
+    title: "Дата конца",
+    dataIndex: "start_date",
+    key: "start_date",
+  },
+  {
+    title: "Время конца",
+    key: "start_time",
+    dataIndex: "start_time",
+  },
+  {
+    title: "ФИО механика",
+    dataIndex: "mechanic_name",
+    key: "mechanic_name",
+  },
+];
+
+export const REGISTRATION_COLUMNS = (RegistrationUpdate, updateRegistration, deleteItem) => [
+  {
+    title: "Дата создания",
+    dataIndex: "reg_date",
+    key: "reg_date",
+  },
+  {
+    title: "Статус записи",
+    key: "status_name",
+    render: (record) => (
+      <Select
+        defaultValue = {`${record.status}`}
+      >
+        {STATUS(RegistrationUpdate, updateRegistration, record)}
+      </Select>
+    ),
+  },
+  {
+    title: "Автомобиль",
+    dataIndex: "car_name",
+    key: "car_name",
+  },
+  {
+    title: "Ифнормация",
+    dataIndex: "info",
+    key: "info",
+  },
+  {
+    title: "Стоимость",
+    dataIndex: "reg_price",
+    key: "reg_price",
+  },
+  {
+    title: "Удалить запись",
+    key: "action",
+    render: (record) => {
+      console.log("Delete", record.id);
+      return (
+        <Button type="primary" onClick={() => deleteItem(record.id)}>
+          Удалить
+        </Button>
+      );
+    },
+  },
+];

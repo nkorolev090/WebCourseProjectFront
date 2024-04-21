@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import {  Select, Button, Table } from "antd";
-import { STATUS } from "../../enums";
+import {  Table } from "antd";
+import { REGISTRATION_COLUMNS } from "../../enums";
 import RegistrationUpdate from "../RegistrationUpdate/RegistrationUpdate";
 import "./Style.css";
 
@@ -11,52 +11,7 @@ const Registration = ({
   updateRegistration,
   user,
 }) => {
-  const columns = [
-    {
-      title: "Дата создания",
-      dataIndex: "reg_date",
-      key: "reg_date",
-    },
-    {
-      title: "Статус записи",
-      key: "status_name",
-      render: (record) => (
-        <Select
-          defaultValue = {`${record.status}`}
-        >
-          {STATUS(RegistrationUpdate, updateRegistration, record)}
-        </Select>
-      ),
-    },
-    {
-      title: "Автомобиль",
-      dataIndex: "car_name",
-      key: "car_name",
-    },
-    {
-      title: "Ифнормация",
-      dataIndex: "info",
-      key: "info",
-    },
-    {
-      title: "Стоимость",
-      dataIndex: "reg_price",
-      key: "reg_price",
-    },
-    {
-      title: "Удалить запись",
-      key: "action",
-      render: (record) => {
-        console.log("Delete", record.id);
-        return (
-          <Button type="primary" onClick={() => deleteItem(record.id)}>
-            Удалить
-          </Button>
-        );
-      },
-    },
-  ];
-
+  
   useEffect(() => {
     const getRegistrations = async () => {
       setRegistrations(null);
@@ -99,7 +54,7 @@ const Registration = ({
     <React.Fragment>
       <h3>Список записей</h3>
       {registrations != null && (
-        <Table dataSource={registrations} columns={columns} />
+        <Table dataSource={registrations} columns={REGISTRATION_COLUMNS(RegistrationUpdate, updateRegistration, deleteItem)} />
       )}
     </React.Fragment>
   );
