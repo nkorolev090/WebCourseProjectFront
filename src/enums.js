@@ -61,6 +61,21 @@ export const BREAKDOWN = (breakdowns) =>
     </Select.Option>
   ));
 
+  export const CAR = (cars) =>
+  cars.map((car) => (
+    <Select.Option
+      key={`${car.id}`}
+      value={`${car.id}`}
+      label={car.br_mod}
+    >
+      {
+        <a target="_blank" rel="noopener noreferrer">
+          {car.br_mod}
+        </a>
+      }
+    </Select.Option>
+  ));
+
 export const SLOTS_COLUMNS = () => [
   {
     title: "В корзину",

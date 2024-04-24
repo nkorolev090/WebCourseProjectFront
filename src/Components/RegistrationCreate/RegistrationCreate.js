@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { DatePicker, Select, Space, Table } from "antd";
-import { BREAKDOWN, SLOTS_COLUMNS } from "../../enums";
+import { Form, DatePicker, Select, Space, Table } from "antd";
+import { CAR, BREAKDOWN, SLOTS_COLUMNS } from "../../enums";
 import moment from "moment";
 
 const RegistrationCreate = ({ addRegistration, user }) => {
   const [slots, setSlots] = useState([]);
   const [breakdowns, setBreakdowns] = useState([]);
+  const [cars, setCars] = useState([]);
   const [dateSlot, setDate] = useState(moment().format("DD-MM-YYYY"));
   const [breakdown_id, setBreakdownId] = useState("1");
+  const [car_id, setCarId] = useState(null);
 
   useEffect(() => {
     const getSlots = async () => {
@@ -65,11 +67,39 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     };
     getBreakdowns();
   }, []);
+  
+  useEffect(() => {
+    const getCars = async () => {
+      setCars(null);
+      const requestOptions = {
+        method: "GET",
+      };
+      if (
+        user.userRole != undefined &&
+        dateSlot != null &&
+        breakdown_id != null
+      ) {
+        return await fetch(`api/Cars`, requestOptions)
+          .then((response) => response.json())
+          .then(
+            (data) => {
+              console.log("Data:", data);
+              setCars(data);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+      }
+    };
+    getCars();
+  }, []);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const car_value = e.target.elements.car_id.value;
+    const car_value = car_id;
     const status_value = e.target.elements.status.value;
     const info_value = e.target.elements.info.value;
 
@@ -108,7 +138,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
   };
 
   const filterOption = (input, option) =>
-  (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
     <React.Fragment>
@@ -147,14 +177,32 @@ const RegistrationCreate = ({ addRegistration, user }) => {
             <Table dataSource={slots} columns={SLOTS_COLUMNS()} />
           )}
 
-          <form onSubmit={handleSubmit}>
-            <label>Id автомобиля: </label>
-            <input
+          <Form onSubmit={handleSubmit}>
+            <Form.Item
+              label="Автомобиль"
+              name="car"
+              rules={[
+                { required: true, message: "Пожалуйста выберете автомобиль" },
+              ]}
+            >
+              <Select
+              style={{
+                minWidth: 200,
+              }}
+              showSearch
+              placeholder="Выберете автомобиль"
+              optionFilterProp="children"
+              onChange={(e) => setCarId(e)}
+              filterOption={filterOption}>
+                { cars != null && CAR(cars)}
+              </Select>
+            </Form.Item>
+            {/*<input
               type="number"
               name="car_id"
               placeholder="Введите Id автомобиля:"
             />
-            <label>Id статуса: </label>
+             <label>Id статуса: </label>
             <input
               type="number"
               name="status"
@@ -162,8 +210,8 @@ const RegistrationCreate = ({ addRegistration, user }) => {
             />
             <label>Информация: </label>
             <input type="text" name="info" placeholder="Введите информацию:" />
-            <button type="submit">Создать</button>
-          </form>
+            <button type="submit">Создать</button> */}
+          </Form>
         </Space>
       </>
     </React.Fragment>
