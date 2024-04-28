@@ -161,6 +161,7 @@ export const REGISTRATION_COLUMNS = (
   RegistrationUpdate,
   updateRegistration,
   deleteItem,
+  openRegInfo,
   user_role
 ) => [
   {
@@ -208,8 +209,20 @@ export const REGISTRATION_COLUMNS = (
     render: (record) => {
       console.log("Delete", record.id);
       return (
-        <Button type="primary" onClick={() => deleteItem(record.id)}>
+        <Button type='default' onClick={() => deleteItem(record.id)}>
           Отменить
+        </Button>
+      );
+    },
+  },
+  {
+    title: "Детали",
+    key: "action_details",
+    render: (record) => {
+      console.log("action_details", record.id);
+      return (
+        <Button type="primary" onClick={() => openRegInfo(record.id)}>
+          Детальная информация
         </Button>
       );
     },
@@ -240,5 +253,47 @@ export const BREAKDOWN_COLUMNS = () => [
     title: "Гарантия (мес.)",
     dataIndex: "warranty",
     key: "warranty",
+  },
+];
+
+export const REGISTRATION_SLOTS_COLUMNS = [
+  {
+    title: "Дата начала",
+    dataIndex: "start_date",
+    key: "start_date",
+  },
+  {
+    title: "Время начала",
+    key: "start_time",
+    dataIndex: "start_time",
+  },
+  {
+    title: "Дата конца",
+    dataIndex: "finish_date",
+    key: "finish_date",
+  },
+  {
+    title: "Время конца",
+    key: "finish_time",
+    dataIndex: "finish_time",
+  },
+  {
+    title: "Вид работ",
+    dataIndex: "breakdown_name",
+    key: "breakdown_name",
+  },
+  {
+    title: "ФИО механика",
+    dataIndex: "mechanic_name",
+    key: "mechanic_name",
+  },
+  {
+    title: "Стоимость",
+    key: "cost",
+    render: (record) => {
+      return (
+        <div> {record.cost + " ₽"} </div>
+      );
+    },
   },
 ];
