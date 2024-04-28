@@ -76,12 +76,12 @@ export const BREAKDOWN = (breakdowns) =>
     </Select.Option>
   ));
 
-export const SLOTS_COLUMNS = () => [
+export const SLOTS_COLUMNS = (toCart) => [
   {
     title: "В корзину",
     key: "to_cart",
     render: (record) => (
-      <Checkbox onChange={(e) => console.log(record, e.target.checked)} />
+      <Checkbox onChange={(e) => toCart(record) && console.log(record, e.target.checked)} />
     ),
   },
   {
@@ -96,18 +96,63 @@ export const SLOTS_COLUMNS = () => [
   },
   {
     title: "Дата конца",
-    dataIndex: "start_date",
-    key: "start_date",
+    dataIndex: "finish_date",
+    key: "finish_date",
   },
   {
     title: "Время конца",
-    key: "start_time",
-    dataIndex: "start_time",
+    key: "finish_time",
+    dataIndex: "finish_time",
   },
   {
     title: "ФИО механика",
     dataIndex: "mechanic_name",
     key: "mechanic_name",
+  },
+];
+
+export const CART_COLUMNS = (toSlots) => [
+  {
+    title: "В корзину",
+    key: "out_cart",
+    render: (record) => (
+      <Checkbox defaultChecked = {true} onChange={(e) => toSlots(record) && console.log(record, e.target.checked)} />
+    ),
+  },
+  {
+    title: "Дата начала",
+    dataIndex: "start_date",
+    key: "start_date",
+  },
+  {
+    title: "Время начала",
+    key: "start_time",
+    dataIndex: "start_time",
+  },
+  {
+    title: "Дата конца",
+    dataIndex: "finish_date",
+    key: "finish_date",
+  },
+  {
+    title: "Время конца",
+    key: "finish_time",
+    dataIndex: "finish_time",
+  },
+  {
+    title: "Вид работ",
+    dataIndex: "breakdown_name",
+    key: "breakdown_name",
+  },
+  {
+    title: "ФИО механика",
+    dataIndex: "mechanic_name",
+    key: "mechanic_name",
+  },
+  {
+    title: "Стоимость",
+    dataIndex: "cost",
+    key: "cost",
   },
 ];
 

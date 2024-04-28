@@ -1,15 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { Form, DatePicker, Select, Space, Table } from "antd";
-import { CAR, BREAKDOWN, SLOTS_COLUMNS } from "../../enums";
+import { Form, DatePicker, Select, Space, Table, Button } from "antd";
+import { CAR, BREAKDOWN, SLOTS_COLUMNS, CART_COLUMNS } from "../../enums";
 import moment from "moment";
 
 const RegistrationCreate = ({ addRegistration, user }) => {
   const [slots, setSlots] = useState([]);
+  const [cart_slots, setCartSlots] = useState([]);
   const [breakdowns, setBreakdowns] = useState([]);
   const [cars, setCars] = useState([]);
   const [dateSlot, setDate] = useState(moment().format("DD-MM-YYYY"));
   const [breakdown_id, setBreakdownId] = useState("1");
   const [car_id, setCarId] = useState(null);
+
+  const toCart = (slot) => {
+    console.log("toCart", slot.id);
+
+    setSlots(slots.filter(({ id }) => id !== slot.id));
+
+    var slot_breakdown = breakdowns.find(b => b.id == breakdown_id);
+
+    var cart_slot ={
+      id: slot.id,
+      breakdown_id: breakdown_id,
+      breakdown_name: slot_breakdown.title,
+      cost: slot_breakdown.price,
+      mechanic_id: slot.mechanic_id,
+      mechanic_name: slot.mechanic_name,
+      start_time: slot.start_time,
+      start_date: slot.start_date,
+      finish_time: slot.finish_time,
+      finish_date: slot.finish_date,
+    }
+
+    setCartSlots([...cart_slots, cart_slot]);
+  };
+
+  const toSlots = (slot) => {
+    setCartSlots(cart_slots.filter(({ id }) => id !== slot.id));
+  };
 
   useEffect(() => {
     const getSlots = async () => {
@@ -67,7 +95,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     };
     getBreakdowns();
   }, []);
-  
+
   useEffect(() => {
     const getCars = async () => {
       setCars(null);
@@ -95,27 +123,32 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     getCars();
   }, []);
 
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = () => {
     const car_value = car_id;
-    const status_value = e.target.elements.status.value;
-    const info_value = e.target.elements.info.value;
 
+    var slots_price = 0;
+    cart_slots.forEach(s => {
+        slots_price += s.cost;
+    })
     const registration = {
       car_id: car_value,
-      info: info_value,
-      status: status_value,
+      status: 1,
+      reg_date: moment().format("DD-MM-YYYY"),
+      reg_price: slots_price,
     };
 
-    console.log(JSON.stringify(registration));
+    const request = {
+      registration: registration,
+      slots: cart_slots,
+    };
+
+    console.log(JSON.stringify(request));
 
     const createRegistration = async () => {
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(registration),
+        body: JSON.stringify(request),
       };
       const response = await fetch(
         "api/Registrations/",
@@ -174,10 +207,14 @@ const RegistrationCreate = ({ addRegistration, user }) => {
             />
           </Space>
           {slots != null && (
-            <Table dataSource={slots} columns={SLOTS_COLUMNS()} />
+            <Table dataSource={slots} columns={SLOTS_COLUMNS(toCart)} />
           )}
-
-          <Form onSubmit={handleSubmit}>
+          <h3>Корзина</h3>
+          {slots != null && (
+            <Table dataSource={cart_slots} columns={CART_COLUMNS(toSlots)} />
+          )}
+          <Form
+          onFinish={handleSubmit}>
             <Form.Item
               label="Автомобиль"
               name="car"
@@ -186,31 +223,19 @@ const RegistrationCreate = ({ addRegistration, user }) => {
               ]}
             >
               <Select
-              style={{
-                minWidth: 200,
-              }}
-              showSearch
-              placeholder="Выберете автомобиль"
-              optionFilterProp="children"
-              onChange={(e) => setCarId(e)}
-              filterOption={filterOption}>
-                { cars != null && CAR(cars)}
+                style={{
+                  minWidth: 200,
+                }}
+                showSearch
+                placeholder="Выберете автомобиль"
+                optionFilterProp="children"
+                onChange={(e) => setCarId(e)}
+                filterOption={filterOption}
+              >
+                {cars != null && CAR(cars)}
               </Select>
             </Form.Item>
-            {/*<input
-              type="number"
-              name="car_id"
-              placeholder="Введите Id автомобиля:"
-            />
-             <label>Id статуса: </label>
-            <input
-              type="number"
-              name="status"
-              placeholder="Введите Id статуса:"
-            />
-            <label>Информация: </label>
-            <input type="text" name="info" placeholder="Введите информацию:" />
-            <button type="submit">Создать</button> */}
+            <Button type="primary" htmlType="submit">Создать</Button>
           </Form>
         </Space>
       </>
