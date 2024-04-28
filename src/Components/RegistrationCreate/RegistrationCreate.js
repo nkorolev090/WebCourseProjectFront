@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, DatePicker, Select, Space, Table, Button } from "antd";
+import { notification, Form, DatePicker, Select, Space, Table, Button } from "antd";
 import { CAR, BREAKDOWN, SLOTS_COLUMNS, CART_COLUMNS } from "../../enums";
 import moment from "moment";
 
@@ -11,6 +11,15 @@ const RegistrationCreate = ({ addRegistration, user }) => {
   const [dateSlot, setDate] = useState(moment().format("DD-MM-YYYY"));
   const [breakdown_id, setBreakdownId] = useState("1");
   const [car_id, setCarId] = useState(null);
+
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type) => {
+    api[type]({
+      message: 'Запись создана',
+        placement: 'bottomRight',
+    });
+  };
 
   const toCart = (slot) => {
     console.log("toCart", slot.id);
@@ -161,6 +170,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
           console.log(data);
           if (response.ok) {
             addRegistration(data);
+            openNotificationWithIcon('success');
           }
         },
         (error) => console.log(error)
@@ -235,6 +245,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
                 {cars != null && CAR(cars)}
               </Select>
             </Form.Item>
+            {contextHolder}
             <Button type="primary" htmlType="submit">Создать</Button>
           </Form>
         </Space>

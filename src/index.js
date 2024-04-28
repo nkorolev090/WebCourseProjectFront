@@ -6,6 +6,7 @@ import Layout from "./Components/Layout/Layout";
 import LogIn from "./Components/LogIn/LogIn";
 import LogOff from "./Components/LogOff/LogOff";
 import RegUser from "./Components/RegUser/RegUser";
+import Main from "./Components/Main/Main";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -69,7 +70,14 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout user={user} />}>
-          <Route index element={<h3>Главная страница</h3>} />
+          <Route
+            index
+            element={
+              <>
+              <Main/>
+              </>
+            }
+          />
           <Route
             path="/registrations"
             element={
@@ -91,20 +99,21 @@ const App = () => {
               </>
             }
           />
-          <Route path="/registration_create"
-            element=
-            {
+          <Route
+            path="/registration_create"
+            element={
               <>
                 {user.userRole == "client" ? (
                   <RegistrationCreate
-                  user={user}
-                  addRegistration={addRegistration}
+                    user={user}
+                    addRegistration={addRegistration}
                   />
                 ) : (
                   ""
                 )}
               </>
-            }/>
+            }
+          />
           <Route
             path="/login"
             element={<LogIn user={user} setUser={setUser} getUser={getUser} />}

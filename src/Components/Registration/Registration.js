@@ -54,7 +54,7 @@ const Registration = ({
     <React.Fragment>
       <h3>Список записей</h3>
       {registrations != null && (
-        <Table dataSource={registrations} columns={REGISTRATION_COLUMNS(RegistrationUpdate, updateRegistration, deleteItem)} />
+        <Table dataSource={registrations} columns={REGISTRATION_COLUMNS(RegistrationUpdate, updateRegistration, deleteItem, user.userRole)} />
       )}
     </React.Fragment>
   );
