@@ -186,6 +186,9 @@ const Registration = ({
               columns={REGISTRATION_SLOTS_COLUMNS}
             ></Table>
             <Form>
+              <Form.Item>
+                <Typography.Text>{"Итоговая стоимость: " + selectedRegistration.reg_price}</Typography.Text>
+              </Form.Item>
               <Form.Item
                 label="Автомобиль"
                 name="car"
@@ -198,6 +201,7 @@ const Registration = ({
                     <Select
                       style={{
                         minWidth: 200,
+                        maxWidth: 500,
                       }}
                       showSearch
                       placeholder="Выберете автомобиль"
@@ -266,11 +270,13 @@ const Registration = ({
                   )}
                 </>
               </Form.Item>
-              <Form.Item label="Информация" name="info">
+              <Form.Item name="info">
+                <>
                 <Typography.Paragraph
                   editable={{
                     icon: <HighlightOutlined />,
                     tooltip: "Введите дополнительную информацию",
+                    placeholder: "Дополнительная информация",
                     onChange: (e) => {
                       var changedReg = selectedRegistration;
                       changedReg.info = e;
@@ -280,6 +286,7 @@ const Registration = ({
                 >
                   {selectedRegistration.info}
                 </Typography.Paragraph>
+                </>
               </Form.Item>
             </Form>
           </>

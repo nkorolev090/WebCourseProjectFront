@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { notification, Form, DatePicker, Select, Space, Table, Button } from "antd";
+import {
+  notification,
+  Form,
+  DatePicker,
+  Select,
+  Space,
+  Table,
+  Button,
+} from "antd";
 import { CAR, BREAKDOWN, SLOTS_COLUMNS, CART_COLUMNS } from "../../enums";
 import moment from "moment";
 
@@ -14,10 +22,10 @@ const RegistrationCreate = ({ addRegistration, user }) => {
 
   const [api, contextHolder] = notification.useNotification();
 
-  const openNotificationWithIcon = (type) => {
+  const openNotificationWithIcon = (type, message) => {
     api[type]({
-      message: 'Запись создана',
-        placement: 'bottomRight',
+      message: message,
+      placement: "bottomRight",
     });
   };
 
@@ -26,9 +34,9 @@ const RegistrationCreate = ({ addRegistration, user }) => {
 
     setSlots(slots.filter(({ id }) => id !== slot.id));
 
-    var slot_breakdown = breakdowns.find(b => b.id == breakdown_id);
+    var slot_breakdown = breakdowns.find((b) => b.id == breakdown_id);
 
-    var cart_slot ={
+    var cart_slot = {
       id: slot.id,
       breakdown_id: breakdown_id,
       breakdown_name: slot_breakdown.title,
@@ -39,14 +47,14 @@ const RegistrationCreate = ({ addRegistration, user }) => {
       start_date: slot.start_date,
       finish_time: slot.finish_time,
       finish_date: slot.finish_date,
-    }
+    };
 
     setCartSlots([...cart_slots, cart_slot]);
   };
 
   const toSlots = (slot) => {
-    if(slot.breakdown_id == breakdown_id){
-      var _slot ={
+    if (slot.breakdown_id == breakdown_id) {
+      var _slot = {
         id: slot.id,
         mechanic_id: slot.mechanic_id,
         mechanic_name: slot.mechanic_name,
@@ -54,7 +62,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
         start_date: slot.start_date,
         finish_time: slot.finish_time,
         finish_date: slot.finish_date,
-      }
+      };
       setSlots([...slots, _slot]);
     }
     setCartSlots(cart_slots.filter(({ id }) => id !== slot.id));
@@ -63,7 +71,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
   useEffect(() => {
     const getSlots = async () => {
       setSlots(null);
-      try{
+      try {
         const requestOptions = {
           method: "GET",
         };
@@ -87,10 +95,9 @@ const RegistrationCreate = ({ addRegistration, user }) => {
               }
             );
         }
-      }catch(error){
-        console.log("Get slots error", error)
+      } catch (error) {
+        console.log("Get slots error", error);
       }
-      
     };
     getSlots();
   }, [dateSlot, breakdown_id]);
@@ -98,7 +105,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
   useEffect(() => {
     const getBreakdowns = async () => {
       setBreakdowns(null);
-      try{
+      try {
         const requestOptions = {
           method: "GET",
         };
@@ -119,8 +126,8 @@ const RegistrationCreate = ({ addRegistration, user }) => {
               }
             );
         }
-      }catch(error){
-        console.log("Get breakdowns error", error)
+      } catch (error) {
+        console.log("Get breakdowns error", error);
       }
     };
     getBreakdowns();
@@ -129,7 +136,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
   useEffect(() => {
     const getCars = async () => {
       setCars(null);
-      try{
+      try {
         const requestOptions = {
           method: "GET",
         };
@@ -150,65 +157,70 @@ const RegistrationCreate = ({ addRegistration, user }) => {
               }
             );
         }
-      }catch(error){
-        console.log("Get cars error", error)
+      } catch (error) {
+        console.log("Get cars error", error);
       }
     };
     getCars();
   }, []);
 
   const handleSubmit = () => {
-    try{
-      const car_value = car_id;
+    try {
+      if (cart_slots.length > 0) {
+        const car_value = car_id;
 
-      var slots_price = 0;
-      cart_slots.forEach(s => {
+        var slots_price = 0;
+        cart_slots.forEach((s) => {
           slots_price += s.cost;
-      })
-      const registration = {
-        car_id: car_value,
-        status: 1,
-        reg_date: moment().format("DD-MM-YYYY"),
-        reg_price: slots_price,
-      };
-  
-      const request = {
-        registration: registration,
-        slots: cart_slots,
-      };
-  
-      console.log(JSON.stringify(request));
-  
-      const createRegistration = async () => {
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(request),
+        });
+        const registration = {
+          car_id: car_value,
+          status: 1,
+          reg_date: moment().format("DD-MM-YYYY"),
+          reg_price: slots_price,
         };
-        const response = await fetch(
-          "api/Registrations/",
-  
-          requestOptions
-        );
-  
-        return await response.json().then(
-          (data) => {
-            console.log(data);
-            if (response.ok) {
-              addRegistration(data);
-              openNotificationWithIcon('success');
-            }
-          },
-          (error) => console.log(error)
-        );
-      };
-  
-      createRegistration();
-  
-    }catch(error){
+
+        const request = {
+          registration: registration,
+          slots: cart_slots,
+        };
+
+        console.log(JSON.stringify(request));
+
+        const createRegistration = async () => {
+          const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request),
+          };
+          const response = await fetch(
+            "api/Registrations/",
+
+            requestOptions
+          );
+
+          return await response.json().then(
+            (data) => {
+              console.log(data);
+              if (response.ok) {
+                addRegistration(data);
+                openNotificationWithIcon("success", "Запись создана");
+              }
+            },
+            (error) => console.log(error)
+          );
+        };
+
+        createRegistration();
+      }
+      else{
+        console.log("Registration dont create!")
+        openNotificationWithIcon("warning", "Запись не создана");
+      }
+    } catch (error) {
       console.log("Create registration error");
     }
-};
+  };
 
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -216,7 +228,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
   return (
     <React.Fragment>
       <>
-        <h3 style={{color: 'GrayText'}} >Создание новой записи</h3>
+        <h3 style={{ color: "GrayText" }}>Создание новой записи</h3>
         <Space
           direction="vertical"
           size="middle"
@@ -249,12 +261,11 @@ const RegistrationCreate = ({ addRegistration, user }) => {
           {slots != null && (
             <Table dataSource={slots} columns={SLOTS_COLUMNS(toCart)} />
           )}
-          <h3 style={{color: 'GrayText'}}>Корзина</h3>
+          <h3 style={{ color: "GrayText" }}>Корзина</h3>
           {slots != null && (
             <Table dataSource={cart_slots} columns={CART_COLUMNS(toSlots)} />
           )}
-          <Form
-          onFinish={handleSubmit}>
+          <Form onFinish={handleSubmit}>
             <Form.Item
               label="Автомобиль"
               name="car"
@@ -276,7 +287,9 @@ const RegistrationCreate = ({ addRegistration, user }) => {
               </Select>
             </Form.Item>
             {contextHolder}
-            <Button type="primary" htmlType="submit">Создать</Button>
+            <Button type="primary" htmlType="submit">
+              Создать
+            </Button>
           </Form>
         </Space>
       </>
