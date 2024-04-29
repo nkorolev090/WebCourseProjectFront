@@ -1,7 +1,6 @@
-
-const RegistrationUpdate = async ( updtRegistration, registration ) => {
-
-  console.log(JSON.stringify(registration));
+const RegistrationUpdate = async (updtRegistration, registration) => {
+  try {
+    console.log(JSON.stringify(registration));
 
     const requestOptions = {
       method: "PUT",
@@ -21,6 +20,8 @@ const RegistrationUpdate = async ( updtRegistration, registration ) => {
       },
       (error) => console.log(error)
     );
-  
+  } catch (error) {
+    console.log("Registration update error", error);
+  }
 };
 export default RegistrationUpdate;

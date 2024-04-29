@@ -1,7 +1,8 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
-import { Layout as LayoutAntd, Menu } from "antd";
+import { Layout as LayoutAntd, Menu, Space } from "antd";
 const { Header, Content, Footer } = LayoutAntd;
+import Image from "../../backgroundImage.png";
 
 const items = [
   {
@@ -33,11 +34,11 @@ const items = [
 const Layout = ({ user }) => {
   return (
     <LayoutAntd>
-      <Header style={{ position: "sticky", top: 0, zIndex: 1, width: "100%" }}>
-        <div
+      <Header style={{ backgroundColor:'white', position: "sticky", top: 0, zIndex: 1, width: "100%" }}>
+        <Space
           style={{
-            float: "right",
-            color: "rgba(255, 255, 255, 0.65)",
+            float:'right',
+            color:'gray',
           }}
         >
           {user.isAuthenticated ? (
@@ -48,10 +49,10 @@ const Layout = ({ user }) => {
           ) : (
             <h4>Пользователь: Гость</h4>
           )}
-        </div>
-        <Menu theme="dark" mode="horizontal" items={items} className="menu" />
+        </Space>
+        <Menu mode="horizontal" theme='light' items={items} className="menu" />
       </Header>
-      <Content className="site-layout" style={{ padding: "0 50px" }}>
+      <Content className="site-layout" style={{ backgroundImage: 'url(' + Image + ')', backgroundSize: 'auto', padding: "0 50px", paddingBottom: "30px" }}>
         <Outlet />
       </Content>
       <Footer style={{ textAlign: "center" }}>AutoService ©2024</Footer>

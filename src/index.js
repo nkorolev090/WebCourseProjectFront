@@ -57,8 +57,10 @@ const App = () => {
     const newRegistrations = registrations.map((obj) => {
       if (obj.id == udptId) {
         obj.car_id = udptRegistration.car_id;
+        obj.car_name = udptRegistration.car_name;
         obj.info = udptRegistration.info;
         obj.status = udptRegistration.status;
+        obj.status_name = udptRegistration.status_name;
       }
       return obj;
     });

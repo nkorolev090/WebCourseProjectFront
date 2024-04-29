@@ -16,18 +16,23 @@ const LogOff = ({ setUser }) => {
 
   const logOff = async (event) => {
     event.preventDefault();
-    const requestOptions = {
-      method: "POST",
-    };
-    
-    return await fetch("api/account/logoff", requestOptions).then(
-      (response) => {
-        response.status === 200 &&
-          setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
-        response.status === 401 ? navigate("/login") : navigate("/");
-        setOpen(false);
-      }
-    );
+    try{
+      const requestOptions = {
+        method: "POST",
+      };
+      
+      return await fetch("api/account/logoff", requestOptions).then(
+        (response) => {
+          response.status === 200 &&
+            setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
+          response.status === 401 ? navigate("/login") : navigate("/");
+          setOpen(false);
+        }
+      );
+    }
+    catch(error){
+      console.log("LogOff error", error)
+    }
   };
 
   const handleCancel = () => {

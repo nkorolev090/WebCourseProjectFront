@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Flex, Image, Table, Space, Row, Col } from "antd";
+import { Typography, Flex, Image, Table, Space, Row, Col, Card } from "antd";
 import { BREAKDOWN_COLUMNS } from "../../enums";
 
 const Main = () => {
@@ -8,21 +8,25 @@ const Main = () => {
   useEffect(() => {
     const getBreakdowns = async () => {
       setBreakdowns(null);
-      const requestOptions = {
-        method: "GET",
-      };
+      try {
+        const requestOptions = {
+          method: "GET",
+        };
 
-      return await fetch(`api/Breakdowns`, requestOptions)
-        .then((response) => response.json())
-        .then(
-          (data) => {
-            console.log("Data:", data);
-            setBreakdowns(data);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+        return await fetch(`api/Breakdowns`, requestOptions)
+          .then((response) => response.json())
+          .then(
+            (data) => {
+              console.log("Data:", data);
+              setBreakdowns(data);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+      } catch (error) {
+        console.log("Get registration details error", error);
+      }
     };
     getBreakdowns();
   }, []);
@@ -35,25 +39,38 @@ const Main = () => {
             style={{ marginBottom: "10px", width: "100%" }}
             justify="center"
           >
-            <Typography.Title justify="center" level={3}>
+            <Typography.Title
+              style={{ color: "GrayText" }}
+              justify="center"
+              level={2}
+            >
               Главная страница
             </Typography.Title>
           </Flex>
           <>
             <Row style={{ marginBottom: "10px", width: "100%" }} gutter={20}>
               <Col span={12}>
-                <Typography.Paragraph>
-                  Ваша машина неисправна? Обращайтесь к нам! Мы — команда
-                  профессионалов, которая поможет вам в решении любой проблемы с
-                  автомобилем. У нас есть всё необходимое оборудование для
-                  проведения диагностики и ремонта любой сложности. Наш
-                  приоритет — качество работы и удовлетворённость клиента. Мы
-                  предоставляем гарантию на многие виды услуг. Записывайтесь
-                  прямо сейчас!
-                </Typography.Paragraph>
+                <Card title="О нас">
+                  <Typography.Paragraph>
+                    Ваша машина неисправна? Обращайтесь к нам! Мы — команда
+                    профессионалов, которая поможет вам в решении любой проблемы
+                    с автомобилем. У нас есть всё необходимое оборудование для
+                    проведения диагностики и ремонта любой сложности. Наш
+                    приоритет — качество работы и удовлетворённость клиента. Мы
+                    предоставляем гарантию на многие виды услуг. Записывайтесь
+                    прямо сейчас!
+                  </Typography.Paragraph>
+                </Card>
               </Col>
               <Col span={12}>
-                <Image src="https://findesk.ru/upload/iblock/d7a/d7a6bb0c7f9f7427c93076f597538764.jpg" />
+                <Image
+                  style={{
+                    border: "2px",
+                    borderBlockColor: "gray",
+                    borderRadius: "20px",
+                  }}
+                  src="https://findesk.ru/upload/iblock/d7a/d7a6bb0c7f9f7427c93076f597538764.jpg"
+                />
               </Col>
             </Row>
           </>
@@ -62,7 +79,11 @@ const Main = () => {
             style={{ marginBottom: "10px", width: "100%" }}
             justify="center"
           >
-            <Typography.Title justify="center" level={5}>
+            <Typography.Title
+              style={{ color: "GrayText" }}
+              justify="center"
+              level={5}
+            >
               Перечень услуг
             </Typography.Title>
           </Flex>

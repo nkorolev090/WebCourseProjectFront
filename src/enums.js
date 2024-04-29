@@ -1,7 +1,7 @@
-import { Tag, Checkbox, Button, Select } from "antd";
+import { Tag, Button, Select } from "antd";
 import React from "react";
 
-const statuses = [
+export const statuses = [
   {
     id: "1",
     name: "На обработке",
@@ -20,23 +20,12 @@ const statuses = [
   },
 ];
 
-export const STATUS = (RegistrationUpdate, updateRegistration, record) =>
+export const STATUS = () =>
   statuses.map((status) => (
     <Select.Option key={`${status.id}`} value={`${status.id}`}>
       <a
         target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => {
-          const registration = {
-            id: record.id,
-            car_id: record.car_id,
-            info: record.info,
-            status: status.id,
-            status_name: status.name,
-          };
-          RegistrationUpdate(updateRegistration, registration);
-        }}
-      >
+        rel="noopener noreferrer">
         {status.name}
       </a>
     </Select.Option>
@@ -73,11 +62,11 @@ export const SLOTS_COLUMNS = (toCart) => [
     title: "В корзину",
     key: "to_cart",
     render: (record) => (
-      <Checkbox
-        onChange={(e) =>
-          toCart(record) && console.log(record, e.target.checked)
+      <Button
+        onClick={() =>
+          toCart(record)
         }
-      />
+      >В корзину</Button>
     ),
   },
   {
@@ -109,15 +98,14 @@ export const SLOTS_COLUMNS = (toCart) => [
 
 export const CART_COLUMNS = (toSlots) => [
   {
-    title: "В корзину",
+    title: "Убрать из корзины",
     key: "out_cart",
     render: (record) => (
-      <Checkbox
-        defaultChecked={true}
-        onChange={(e) =>
-          toSlots(record) && console.log(record, e.target.checked)
+      <Button
+        onClick={() =>
+          toSlots(record)
         }
-      />
+      >Убрать</Button>
     ),
   },
   {
@@ -176,12 +164,20 @@ export const REGISTRATION_COLUMNS = (
       <>
         {user_role == "mechanic" ? (
           <>
-            <Select defaultValue={`${record.status}`}>
-              {STATUS(RegistrationUpdate, updateRegistration, record)}
+            <Select
+              defaultValue={`${record.status}`}
+              onChange={(e) => {
+                var changedReg = record;
+                changedReg.status = e;
+                changedReg.status_name = statuses.find(s => s.id == e).name;
+                RegistrationUpdate(updateRegistration, changedReg);
+              }}
+            >
+              {STATUS()}
             </Select>
           </>
         ) : (
-          <Tag color={'cyan-inverse'} key={record.status}>
+          <Tag color={"cyan-inverse"} key={record.status}>
             {record.status_name}
           </Tag>
         )}
@@ -194,7 +190,7 @@ export const REGISTRATION_COLUMNS = (
     key: "car_name",
   },
   {
-    title: "Ифнормация",
+    title: "Информация",
     dataIndex: "info",
     key: "info",
   },
@@ -209,7 +205,7 @@ export const REGISTRATION_COLUMNS = (
     render: (record) => {
       console.log("Delete", record.id);
       return (
-        <Button type='default' onClick={() => deleteItem(record.id)}>
+        <Button type="default" onClick={() => deleteItem(record.id)}>
           Отменить
         </Button>
       );
@@ -244,9 +240,7 @@ export const BREAKDOWN_COLUMNS = () => [
     title: "Стоимость",
     key: "price",
     render: (record) => {
-      return (
-        <div> {record.price + " ₽"} </div>
-      );
+      return <div> {record.price + " ₽"} </div>;
     },
   },
   {
@@ -291,9 +285,7 @@ export const REGISTRATION_SLOTS_COLUMNS = [
     title: "Стоимость",
     key: "cost",
     render: (record) => {
-      return (
-        <div> {record.cost + " ₽"} </div>
-      );
+      return <div> {record.cost + " ₽"} </div>;
     },
   },
 ];
