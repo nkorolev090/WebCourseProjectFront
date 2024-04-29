@@ -140,8 +140,10 @@ export const CART_COLUMNS = (toSlots) => [
   },
   {
     title: "Стоимость",
-    dataIndex: "cost",
     key: "cost",
+    render: (record) => (
+      <div>{record.cost + " ₽"}</div>
+    ),
   },
 ];
 
@@ -196,8 +198,10 @@ export const REGISTRATION_COLUMNS = (
   },
   {
     title: "Стоимость",
-    dataIndex: "reg_price",
     key: "reg_price",
+    render: (record) => (
+      <div>{record.reg_price + " ₽"}</div>
+    ),
   },
   {
     title: "Отменить запись",

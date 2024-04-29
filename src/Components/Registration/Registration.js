@@ -193,23 +193,34 @@ const Registration = ({
                   { required: true, message: "Пожалуйста выберете автомобиль" },
                 ]}
               >
-                <Select
-                  style={{
-                    minWidth: 200,
-                  }}
-                  showSearch
-                  placeholder="Выберете автомобиль"
-                  optionFilterProp="children"
-                  onChange={(e) => {
-                    var changedReg = selectedRegistration;
-                    changedReg.car_id = e;
-                    RegistrationUpdate(updateRegistration, changedReg);
-                  }}
-                  filterOption={filterOption}
-                  defaultValue={`${selectedRegistration.car_id}`}
-                >
-                  {cars != null && CAR(cars)}
-                </Select>
+                <>
+                  {user.userRole == "client" ? (
+                    <Select
+                      style={{
+                        minWidth: 200,
+                      }}
+                      showSearch
+                      placeholder="Выберете автомобиль"
+                      optionFilterProp="children"
+                      onChange={(e) => {
+                        var changedReg = selectedRegistration;
+                        changedReg.car_id = e;
+                        RegistrationUpdate(updateRegistration, changedReg);
+                      }}
+                      filterOption={filterOption}
+                      defaultValue={`${selectedRegistration.car_id}`}
+                    >
+                      {cars != null && CAR(cars)}
+                    </Select>
+                  ) : (
+                    <Tag
+                      color={"cyan-inverse"}
+                      key={selectedRegistration.car_id}
+                    >
+                      {selectedRegistration.car_name}
+                    </Tag>
+                  )}
+                </>
               </Form.Item>
               <Form.Item
                 label="Статус"
@@ -222,7 +233,7 @@ const Registration = ({
                 ]}
               >
                 <>
-                  {user.userRole == "client" ? (
+                  {user.userRole == "mechanic" ? (
                     <>
                       <Select
                         style={{

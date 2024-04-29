@@ -4,7 +4,7 @@ import { Layout as LayoutAntd, Menu, Space } from "antd";
 const { Header, Content, Footer } = LayoutAntd;
 import Image from "../../backgroundImage.png";
 
-const items = [
+const items = (user) => [
   {
     label: <Link to={"/"}>Главная</Link>,
     key: "1",
@@ -13,7 +13,7 @@ const items = [
     label: <Link to={"/registrations"}>Записи</Link>,
     key: "2",
   },
-  {
+  user.userRole == "client" && {
     label: <Link to={"/registration_create"}>Создать запись</Link>,
     key: "3",
   },
@@ -50,7 +50,7 @@ const Layout = ({ user }) => {
             <h4>Пользователь: Гость</h4>
           )}
         </Space>
-        <Menu mode="horizontal" theme='light' items={items} className="menu" />
+        <Menu mode="horizontal" theme='light' items={items(user)} className="menu" />
       </Header>
       <Content className="site-layout" style={{ backgroundImage: 'url(' + Image + ')', backgroundSize: 'auto', padding: "0 50px", paddingBottom: "30px" }}>
         <Outlet />
