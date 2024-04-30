@@ -187,7 +187,7 @@ const Registration = ({
             ></Table>
             <Form>
               <Form.Item>
-                <Typography.Text>{"Итоговая стоимость: " + selectedRegistration.reg_price}</Typography.Text>
+                <Typography.Text>{"Итоговая стоимость: " + selectedRegistration.reg_price + " ₽"}</Typography.Text>
               </Form.Item>
               <Form.Item
                 label="Автомобиль"

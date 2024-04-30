@@ -12,24 +12,24 @@ import { CAR, BREAKDOWN, SLOTS_COLUMNS, CART_COLUMNS } from "../../enums";
 import moment from "moment";
 
 const RegistrationCreate = ({ addRegistration, user }) => {
-  const [slots, setSlots] = useState([]);
-  const [cart_slots, setCartSlots] = useState([]);
-  const [breakdowns, setBreakdowns] = useState([]);
-  const [cars, setCars] = useState([]);
-  const [dateSlot, setDate] = useState(moment().format("DD-MM-YYYY"));
-  const [breakdown_id, setBreakdownId] = useState("1");
-  const [car_id, setCarId] = useState(null);
+  const [slots, setSlots] = useState([]); //для хранения слотов
+  const [cart_slots, setCartSlots] = useState([]); //для хранения слотов в корзинне
+  const [breakdowns, setBreakdowns] = useState([]);//для хранения услуг
+  const [cars, setCars] = useState([]);//для хранения автомобилей
+  const [dateSlot, setDate] = useState(moment().format("DD-MM-YYYY"));//для хранения выбранной даты
+  const [breakdown_id, setBreakdownId] = useState("1");//для хранения выбранной услуги
+  const [car_id, setCarId] = useState(null);//для хранения выбранного авто
 
-  const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification();//для хранения состояния уведомления
 
-  const openNotificationWithIcon = (type, message) => {
+  const openNotificationWithIcon = (type, message) => {//показ уведомления
     api[type]({
       message: message,
       placement: "bottomRight",
     });
   };
 
-  const toCart = (slot) => {
+  const toCart = (slot) => {//перемещения слота в корзину
     console.log("toCart", slot.id);
 
     setSlots(slots.filter(({ id }) => id !== slot.id));
@@ -52,7 +52,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     setCartSlots([...cart_slots, cart_slot]);
   };
 
-  const toSlots = (slot) => {
+  const toSlots = (slot) => {//перемещения слота из корзины
     if (slot.breakdown_id == breakdown_id) {
       var _slot = {
         id: slot.id,
@@ -68,7 +68,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     setCartSlots(cart_slots.filter(({ id }) => id !== slot.id));
   };
 
-  useEffect(() => {
+  useEffect(() => {//получение слотов
     const getSlots = async () => {
       setSlots(null);
       try {
@@ -102,7 +102,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     getSlots();
   }, [dateSlot, breakdown_id]);
 
-  useEffect(() => {
+  useEffect(() => {//получение услуг
     const getBreakdowns = async () => {
       setBreakdowns(null);
       try {
@@ -133,7 +133,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     getBreakdowns();
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {//получение автомобилей
     const getCars = async () => {
       setCars(null);
       try {
@@ -164,7 +164,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     getCars();
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = () => {//создание записи
     try {
       if (cart_slots.length > 0) {
         const car_value = car_id;
@@ -205,6 +205,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
               if (response.ok) {
                 addRegistration(data);
                 openNotificationWithIcon("success", "Запись создана");
+                setCartSlots(null);
               }
             },
             (error) => console.log(error)

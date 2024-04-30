@@ -86,7 +86,6 @@ const App = () => {
               <>
                 {user.userRole == "client" || user.userRole == "mechanic" ? (
                   <>
-                    {/* <RegistrationUpdate updtRegistration={updateRegistration} /> */}
                     <Registration
                       user={user}
                       registrations={registrations}
