@@ -13,7 +13,7 @@ const Main = () => {
           method: "GET",
         };
 
-        return await fetch(`api/Breakdowns`, requestOptions)
+        return await fetch(`api/Breakdowns/everything`, requestOptions)
           .then((response) => response.json())
           .then(
             (data) => {

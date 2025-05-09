@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Registration from "./Components/Registration/Registration";
 import RegistrationCreate from "./Components/RegistrationCreate/RegistrationCreate";
+import Cart from "./Components/Cart/Cart";
 import Layout from "./Components/Layout/Layout";
 import LogIn from "./Components/LogIn/LogIn";
 import LogOff from "./Components/LogOff/LogOff";
@@ -18,7 +19,11 @@ const App = () => {
   });
 
   const getUser = async () => {
-    return await fetch("api/account/isauthenticated")
+    const requestOptions = {
+      method: "GET",
+      headers: { "Authorization": "Bearer "+localStorage.getItem("jwt_token")}
+    };
+    return await fetch("api/account/isauthenticated", requestOptions)
       .then((response) => {
         response.status === 401 &&
           setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
@@ -108,6 +113,19 @@ const App = () => {
                   <RegistrationCreate
                     user={user}
                     addRegistration={addRegistration}
+                  />
+                ) : (
+                  ""
+                )}
+              </>
+            }
+          />
+                    <Route
+            path="/cart"
+            element={
+              <>
+                {user.userRole == "client" ? (
+                  <Cart
                   />
                 ) : (
                   ""

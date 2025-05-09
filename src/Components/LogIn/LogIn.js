@@ -27,9 +27,9 @@ const LogIn = ({ user, setUser, getUser }) => {
           (data) => {
             console.log("Data:", data);
             if (
-              typeof data !== "undefined" &&
-              typeof data.email !== "undefined"
+              typeof data !== "undefined"
             ) {
+              localStorage.setItem('jwt_token', data.token);
               getUser();
               setUser({
                 isAuthenticated: true,

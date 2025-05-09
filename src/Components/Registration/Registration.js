@@ -47,14 +47,15 @@ const Registration = ({
       try {
         const requestOptions = {
           method: "GET",
+          headers: { "Authorization": "Bearer "+ localStorage.getItem("jwt_token")}
         };
         if (user.userRole != undefined) {
-          return await fetch(`api/Registrations`, requestOptions)
+          return await fetch(`api/Registrations/getRegistrations`, requestOptions)
             .then((response) => response.json())
             .then(
               (data) => {
                 console.log("Data:", data);
-                setRegistrations(data);
+                setRegistrations(data.map(function (i){return i.registration}));
               },
               (error) => {
                 console.log(error);
@@ -75,9 +76,10 @@ const Registration = ({
       try {
         const requestOptions = {
           method: "GET",
+          headers: { "Authorization": "Bearer "+localStorage.getItem("jwt_token")}
         };
         if (user.userRole != undefined) {
-          return await fetch(`api/Cars`, requestOptions)
+          return await fetch(`api/Cars/getCars`, requestOptions)
             .then((response) => response.json())
             .then(
               (data) => {
@@ -102,6 +104,7 @@ const Registration = ({
     try {
       const requestOptions = {
         method: "GET",
+        headers: { "Authorization": "Bearer "+localStorage.getItem("jwt_token")}
       };
       if (user.userRole != undefined) {
         return await fetch(`api/Registrations/${reg_id}`, requestOptions)
@@ -128,6 +131,7 @@ const Registration = ({
     try {
       const requestOptions = {
         method: "DELETE",
+        headers: { "Authorization": "Bearer "+localStorage.getItem("jwt_token")}
       };
       return await fetch(`api/Registrations/${id}`, requestOptions).then(
         (response) => {

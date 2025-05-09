@@ -22,6 +22,9 @@ const RegistrationCreate = ({ addRegistration, user }) => {
 
   const [api, contextHolder] = notification.useNotification();//для хранения состояния уведомления
 
+  const removeSlot= (removeId) =>
+    setSlots(slots.filter(({ id }) => id !== removeId));
+
   const openNotificationWithIcon = (type, message) => {//показ уведомления
     api[type]({
       message: message,
@@ -29,27 +32,48 @@ const RegistrationCreate = ({ addRegistration, user }) => {
     });
   };
 
-  const toCart = (slot) => {//перемещения слота в корзину
-    console.log("toCart", slot.id);
+  const toCart = async (slot) => {//перемещения слота в корзину
+    try {
+      const requestOptions = {
+        method: "PUT",
+        headers: { "Authorization": "Bearer "+localStorage.getItem("jwt_token")}
+      };
+      return await fetch(`/api/Cart/AddCartItem?slotId=${slot.id}&breakdownId=${breakdown_id}`, requestOptions).then(
+        (response) => {
+          if (response.ok) {
+            removeSlot(slot.id)
+          } else {
+            {
+              contextHolder;
+            }
+            openNotificationWithIcon("warning", "Услуга не добавлена", "");
+          }
+        },
+        (error) => console.log(error)
+      );
+    } catch (error) {
+      console.log("Put error", error);
+    }
+    // console.log("toCart", slot.id);
 
-    setSlots(slots.filter(({ id }) => id !== slot.id));
+    // setSlots(slots.filter(({ id }) => id !== slot.id));
 
-    var slot_breakdown = breakdowns.find((b) => b.id == breakdown_id);
+    // var slot_breakdown = breakdowns.find((b) => b.id == breakdown_id);
 
-    var cart_slot = {
-      id: slot.id,
-      breakdown_id: breakdown_id,
-      breakdown_name: slot_breakdown.title,
-      cost: slot_breakdown.price,
-      mechanic_id: slot.mechanic_id,
-      mechanic_name: slot.mechanic_name,
-      start_time: slot.start_time,
-      start_date: slot.start_date,
-      finish_time: slot.finish_time,
-      finish_date: slot.finish_date,
-    };
+    // var cart_slot = {
+    //   id: slot.id,
+    //   breakdown_id: breakdown_id,
+    //   breakdown_name: slot_breakdown.title,
+    //   cost: slot_breakdown.price,
+    //   mechanic_id: slot.mechanic_id,
+    //   mechanic_name: slot.mechanic_name,
+    //   start_time: slot.start_time,
+    //   start_date: slot.start_date,
+    //   finish_time: slot.finish_time,
+    //   finish_date: slot.finish_date,
+    // };
 
-    setCartSlots([...cart_slots, cart_slot]);
+    // setCartSlots([...cart_slots, cart_slot]);
   };
 
   const toSlots = (slot) => {//перемещения слота из корзины
@@ -74,6 +98,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
       try {
         const requestOptions = {
           method: "GET",
+          headers: { "Authorization": "Bearer "+ localStorage.getItem("jwt_token")}
         };
         if (
           user.userRole != undefined &&
@@ -114,7 +139,7 @@ const RegistrationCreate = ({ addRegistration, user }) => {
           dateSlot != null &&
           breakdown_id != null
         ) {
-          return await fetch(`api/Breakdowns`, requestOptions)
+          return await fetch(`api/Breakdowns/everything`, requestOptions)
             .then((response) => response.json())
             .then(
               (data) => {
@@ -139,13 +164,14 @@ const RegistrationCreate = ({ addRegistration, user }) => {
       try {
         const requestOptions = {
           method: "GET",
+          headers: { "Authorization": "Bearer "+ localStorage.getItem("jwt_token")}
         };
         if (
           user.userRole != undefined &&
           dateSlot != null &&
           breakdown_id != null
         ) {
-          return await fetch(`api/Cars`, requestOptions)
+          return await fetch(`api/Cars/GetCars`, requestOptions)
             .then((response) => response.json())
             .then(
               (data) => {
@@ -190,11 +216,11 @@ const RegistrationCreate = ({ addRegistration, user }) => {
         const createRegistration = async () => {
           const requestOptions = {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Authorization": "Bearer "+ localStorage.getItem("jwt_token"), "Content-Type": "application/json" },
             body: JSON.stringify(request),
           };
           const response = await fetch(
-            "api/Registrations/",
+            "api/Registrations/PostRegistration",
 
             requestOptions
           );

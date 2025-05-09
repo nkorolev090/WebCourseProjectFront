@@ -23,8 +23,9 @@ const LogOff = ({ setUser }) => {
       
       return await fetch("api/account/logoff", requestOptions).then(
         (response) => {
+          localStorage.setItem("jwt_token", "");
           response.status === 200 &&
-            setUser({ isAuthenticated: false, userDTO: null, userRole: "" });
+            setUser({ isAuthenticated: false, userDTO: null, userRole: "" })
           response.status === 401 ? navigate("/login") : navigate("/");
           setOpen(false);
         }

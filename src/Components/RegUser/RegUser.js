@@ -34,11 +34,11 @@ const RegUser = ({ user, setUser, getUser }) => {
         (data) => {
           console.log("Data:", data);
           if (
-            typeof data !== "undefined" &&
-            typeof data.email !== "undefined"
+            typeof data !== "undefined"
           ) {
             getUser();
             setUser({ isAuthenticated: true, userDTO: null, userRole: "" });
+            localStorage.setItem('jwt_token', data.token);
             navigate("/");
           }
           typeof data !== "undefined" &&
